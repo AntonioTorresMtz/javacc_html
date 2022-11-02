@@ -1,0 +1,145 @@
+PARSER_BEGIN(examen)
+    public class examen {
+        public static void main(String args[]) throws ParseException {
+            examen parser = new examen(System.in);
+            parser.Inicial();
+            System.out.print("Analisis terminado");
+        }
+    }
+
+PARSER_END(examen)
+SKIP :
+{" " | "\t" | "\n" | "\r" | < "<!--" <TEXTO> "-->">}
+
+TOKEN :
+{
+<HTML: "<html>"> |
+<HTML_CIERRE: "</html>"> |
+<HEAD: "<head>"> |
+<HEAD_CIERRE: "</head>"> |
+<TITLE: "<title>"> |
+<TITLE_CIERRE: "</title>"> |
+<BODY: "<body>"> |
+<BODY_CIERRE: "</body>">|
+<DIV: "<div>"> |
+<DIV_CIERRE: "</div>"> |
+<H1: "<h1>"> |
+<H1_CIERRE: "</h1>"> |
+<H2: "<h2>"> |
+<H2_CIERRE: "</h2>"> |
+<P: "<p>">|
+<P_CIERRE: "</p>">|
+<SELECT: "<select>"> |
+<SELECT_CIERRE: "</select>"> |
+<OPTION: "<option>"> |
+<OPTION_CIERRE: "</option>"> |
+<BR: "<br>"> |
+<B: "<b>"> |
+<B_CIERRE: "</b>"> |
+<U: "<u>"> |
+<U_CIERRE: "</u>"> |
+<I: "<i>"> |
+<I_CIERRE: "</i>"> |
+<TEXTO: (~["<"])*>
+}
+
+
+//Producciones
+void Inicial() :
+{}
+{
+(Html())+ <EOF> 
+}
+
+void Html():
+{}
+{
+    <HTML> Head() Body() <HTML_CIERRE>
+}
+
+void Head():
+{}
+{
+    <HEAD> Title() <HEAD_CIERRE>
+}
+
+void Title():
+{}
+{
+    <TITLE> <TEXTO> <TITLE_CIERRE>
+}
+
+void Body():
+{}
+{
+    <BODY> Etiquetas() <BODY_CIERRE>
+}
+
+void Etiquetas():
+{}
+{
+ [Div() | h1() | h2() | p() | Select()]
+}
+
+void Div():
+{}
+{
+    <DIV> Etiquetas() <DIV_CIERRE>
+}
+
+void h1():
+{}
+{
+    <H1> Texto() <H1_CIERRE>
+}
+
+void h2():
+{}
+{
+    <H2> Texto() <H2_CIERRE>
+}
+
+
+void p():
+{}
+{
+    <P> Texto() <P_CIERRE>
+}
+
+void Texto():
+{}
+{
+    [<TEXTO> | <BR> | b() | u() | i()]
+}
+
+void b():
+{}
+{
+    <B> <TEXTO> <B_CIERRE>
+}
+
+void u():
+{}
+{
+    <U> <TEXTO> <U_CIERRE>
+}
+
+void i():
+{}
+{
+    <I> <TEXTO> <I_CIERRE>
+}
+
+void Select():
+{}
+{
+    <SELECT> Option() <SELECT_CIERRE>
+}
+
+void Option():
+{}
+{
+    <OPTION> <TEXTO> <OPTION_CIERRE>
+}
+
+
